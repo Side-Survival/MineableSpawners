@@ -6,6 +6,7 @@ import com.dnyferguson.mineablespawners.utils.Chat;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.EntityType;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -58,7 +59,8 @@ public class API {
         ItemMeta meta = item.getItemMeta();
 
         String mobFormatted = Chat.uppercaseStartingLetters(entityType.name().toString());
-        meta.setDisplayName(plugin.getConfigurationHandler().getMessage("global", "name").replace("%mob%", mobFormatted));
+        meta.setDisplayName(plugin.getConfigurationHandler().getMessage(null, "global", "name").replace("%mob%", mobFormatted));
+        meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
         List<String> newLore = new ArrayList<>();
         if (plugin.getConfigurationHandler().getList("global", "lore") != null && plugin.getConfigurationHandler().getBoolean("global", "lore-enabled")) {
             for (String line : plugin.getConfigurationHandler().getList("global", "lore")) {

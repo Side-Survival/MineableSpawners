@@ -92,7 +92,7 @@ public class SpawnerMineListener implements Listener {
 
         // check if blacklisted world
         if (plugin.getConfigurationHandler().getList("mining", "blacklisted-worlds").contains(player.getWorld().getName())) {
-            player.sendMessage(plugin.getConfigurationHandler().getMessage("mining", "blacklisted"));
+            player.sendMessage(plugin.getConfigurationHandler().getMessage(player, "mining", "blacklisted"));
             e.setCancelled(true);
             return;
         }
@@ -100,14 +100,14 @@ public class SpawnerMineListener implements Listener {
         // check if requiring permission
         if (plugin.getConfigurationHandler().getBoolean("mining", "require-permission")) {
             if (!player.hasPermission("mineablespawners.mine")) {
-                handleStillBreak(e, player, plugin.getConfigurationHandler().getMessage("mining", "no-permission"), plugin.getConfigurationHandler().getMessage("mining", "requirements.permission"));
+                handleStillBreak(e, player, plugin.getConfigurationHandler().getMessage(player, "mining", "no-permission"), plugin.getConfigurationHandler().getMessage(player, "mining", "requirements.permission"));
                 return;
             }
         }
 
         if (plugin.getConfigurationHandler().getBoolean("mining", "require-individual-permission")) {
             if (!player.hasPermission("mineablespawners.mine." + entityType.name().toLowerCase())) {
-                handleStillBreak(e, player, plugin.getConfigurationHandler().getMessage("mining", "no-individual-permission"), plugin.getConfigurationHandler().getMessage("mining", "requirements.individual-permission"));
+                handleStillBreak(e, player, plugin.getConfigurationHandler().getMessage(player, "mining", "no-individual-permission"), plugin.getConfigurationHandler().getMessage(player, "mining", "requirements.individual-permission"));
                 return;
             }
         }
@@ -115,7 +115,7 @@ public class SpawnerMineListener implements Listener {
         // check if right tool
         Material tool = player.getInventory().getItemInHand().getType();
         if (!plugin.getConfigurationHandler().getList("mining", "tools").contains(tool.name())) {
-            handleStillBreak(e, player, plugin.getConfigurationHandler().getMessage("mining", "wrong-tool"), plugin.getConfigurationHandler().getMessage("mining", "requirements.wrong-tool"));
+            handleStillBreak(e, player, plugin.getConfigurationHandler().getMessage(player, "mining", "wrong-tool"), plugin.getConfigurationHandler().getMessage(player, "mining", "requirements.wrong-tool"));
             return;
         }
 
@@ -129,12 +129,12 @@ public class SpawnerMineListener implements Listener {
             if (plugin.getConfigurationHandler().getBoolean("mining", "require-silktouch-level")) {
                 int requiredLevel = plugin.getConfigurationHandler().getInteger("mining", "required-level");
                 if (silkTouchLevel < requiredLevel) {
-                    handleStillBreak(e, player, plugin.getConfigurationHandler().getMessage("mining", "not-level-required"), plugin.getConfigurationHandler().getMessage("mining", "requirements.silktouch-level"));
+                    handleStillBreak(e, player, plugin.getConfigurationHandler().getMessage(player, "mining", "not-level-required"), plugin.getConfigurationHandler().getMessage(player, "mining", "requirements.silktouch-level"));
                     return;
                 }
             } else {
                 if (silkTouchLevel < 1) {
-                    handleStillBreak(e, player, plugin.getConfigurationHandler().getMessage("mining", "no-silktouch"), plugin.getConfigurationHandler().getMessage("mining", "requirements.silktouch"));
+                    handleStillBreak(e, player, plugin.getConfigurationHandler().getMessage(player, "mining", "no-silktouch"), plugin.getConfigurationHandler().getMessage(player, "mining", "requirements.silktouch"));
                     return;
                 }
             }
@@ -151,7 +151,7 @@ public class SpawnerMineListener implements Listener {
 
             if (!plugin.getEcon().withdrawPlayer(player, cost).transactionSuccess()) {
                 String missing = df.format(cost - plugin.getEcon().getBalance(player));
-                player.sendMessage(plugin.getConfigurationHandler().getMessage("mining", "not-enough-money").replace("%missing%", missing).replace("%cost%", cost + ""));
+                player.sendMessage(plugin.getConfigurationHandler().getMessage(player, "mining", "not-enough-money").replace("%missing%", missing).replace("%cost%", cost + ""));
                 e.setCancelled(true);
                 return;
             }
@@ -185,13 +185,13 @@ public class SpawnerMineListener implements Listener {
         ItemStack item = MineableSpawners.getApi().getSpawnerFromEntityType(entityType);
 
         if (cost > 0) {
-            player.sendMessage(plugin.getConfigurationHandler().getMessage("mining", "transaction-success").replace("%type%", Chat.uppercaseStartingLetters(entityType.name())).replace("%cost%", df.format(cost)).replace("%balance%", df.format(plugin.getEcon().getBalance(player))));
+            player.sendMessage(plugin.getConfigurationHandler().getMessage(player, "mining", "transaction-success").replace("%type%", Chat.uppercaseStartingLetters(entityType.name())).replace("%cost%", df.format(cost)).replace("%balance%", df.format(plugin.getEcon().getBalance(player))));
         }
 
         if (plugin.getConfigurationHandler().getBoolean("mining", "drop-to-inventory")) {
             if (player.getInventory().firstEmpty() == -1) {
                 e.setCancelled(true);
-                player.sendMessage(plugin.getConfigurationHandler().getMessage("mining", "inventory-full"));
+                player.sendMessage(plugin.getConfigurationHandler().getMessage(player, "mining", "inventory-full"));
                 return;
             }
             minedSpawners.add(loc);
@@ -212,7 +212,7 @@ public class SpawnerMineListener implements Listener {
         }
 
         if (msg.length() > 0) {
-            player.sendMessage(plugin.getConfigurationHandler().getMessage("mining", "still-break").replace("%requirement%", reason));
+            player.sendMessage(plugin.getConfigurationHandler().getMessage(player, "mining", "still-break").replace("%requirement%", reason));
         }
     }
 }

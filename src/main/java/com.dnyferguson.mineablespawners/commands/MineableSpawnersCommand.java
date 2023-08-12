@@ -2,9 +2,16 @@ package com.dnyferguson.mineablespawners.commands;
 
 import com.dnyferguson.mineablespawners.MineableSpawners;
 import com.dnyferguson.mineablespawners.utils.Chat;
+import lv.side.lang.api.LangAPI;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Player;
+
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MineableSpawnersCommand implements CommandExecutor {
     private final MineableSpawners plugin;
@@ -79,38 +86,87 @@ public class MineableSpawnersCommand implements CommandExecutor {
             return true;
         }
 
+        if (subCommand.equalsIgnoreCase("updatelang") && sender.hasPermission("mineablespawners.reload")) {
+            Map<String, String> keyMap = new HashMap<>();
+
+            if (plugin.getConfig().isConfigurationSection("mining.requirements")) {
+                ConfigurationSection messages = plugin.getConfig().getConfigurationSection("mining.requirements");
+
+                //noinspection ConstantConditions
+                Collection<String> keys = messages.getKeys(true);
+                for (String key : keys) {
+                    if (messages.isString(key)) {
+                        String value = messages.getString(key);
+                        keyMap.put("s-spawners.mining.requirements." + key, value);
+                    }
+                }
+            }
+
+            if (plugin.getConfig().isConfigurationSection("mining.messages")) {
+                ConfigurationSection messages = plugin.getConfig().getConfigurationSection("mining.messages");
+
+                //noinspection ConstantConditions
+                Collection<String> keys = messages.getKeys(true);
+                for (String key : keys) {
+                    if (messages.isString(key)) {
+                        String value = messages.getString(key);
+                        keyMap.put("s-spawners.mining." + key, value);
+                    }
+                }
+            }
+
+            if (plugin.getConfig().isConfigurationSection("anvil.messages")) {
+                ConfigurationSection messages = plugin.getConfig().getConfigurationSection("anvil.messages");
+
+                //noinspection ConstantConditions
+                Collection<String> keys = messages.getKeys(true);
+                for (String key : keys) {
+                    if (messages.isString(key)) {
+                        String value = messages.getString(key);
+                        keyMap.put("s-spawners.anvil." + key, value);
+                    }
+                }
+            }
+
+            LangAPI.updateDefaults(keyMap);
+            sender.sendMessage("[MineableSpawners] Default lang map reloaded!");
+            return true;
+        }
+
         sendHelpMessage(sender);
         return true;
     }
 
     private void sendHelpMessage(CommandSender sender) {
-        StringBuilder msg = new StringBuilder(plugin.getConfigurationHandler().getMessage("main", "title")).append("\n \n");
+        Player pSender = (sender instanceof Player player) ? player : null;
+
+        StringBuilder msg = new StringBuilder(plugin.getConfigurationHandler().getMessage(pSender, "main", "title")).append("\n \n");
         if (!plugin.getConfigurationHandler().getBoolean("give", "require-permission")) {
-            msg.append(plugin.getConfigurationHandler().getMessage("main", "give"));
+            msg.append(plugin.getConfigurationHandler().getMessage(pSender, "main", "give"));
             msg.append("\n \n");
         }
         if (plugin.getConfigurationHandler().getBoolean("give", "require-permission") && sender.hasPermission("mineablespawners.give")) {
-            msg.append(plugin.getConfigurationHandler().getMessage("main", "give"));
+            msg.append(plugin.getConfigurationHandler().getMessage(pSender, "main", "give"));
             msg.append("\n \n");
         }
         if (!plugin.getConfigurationHandler().getBoolean("set", "require-permission")) {
-            msg.append(plugin.getConfigurationHandler().getMessage("main", "set"));
+            msg.append(plugin.getConfigurationHandler().getMessage(pSender, "main", "set"));
             msg.append("\n \n");
         }
         if (plugin.getConfigurationHandler().getBoolean("set", "require-permission") && sender.hasPermission("mineablespawners.set")) {
-            msg.append(plugin.getConfigurationHandler().getMessage("main", "set"));
+            msg.append(plugin.getConfigurationHandler().getMessage(pSender, "main", "set"));
             msg.append("\n \n");
         }
         if (!plugin.getConfigurationHandler().getBoolean("types", "require-permission")) {
-            msg.append(plugin.getConfigurationHandler().getMessage("main", "types"));
+            msg.append(plugin.getConfigurationHandler().getMessage(pSender, "main", "types"));
             msg.append("\n \n");
         }
         if (plugin.getConfigurationHandler().getBoolean("types", "require-permission") && sender.hasPermission("mineablespawners.types")) {
-            msg.append(plugin.getConfigurationHandler().getMessage("main", "types"));
+            msg.append(plugin.getConfigurationHandler().getMessage(pSender, "main", "types"));
             msg.append("\n \n");
         }
         if (sender.hasPermission("mineablespawners.reload")) {
-            msg.append(plugin.getConfigurationHandler().getMessage("main", "reload"));
+            msg.append(plugin.getConfigurationHandler().getMessage(pSender, "main", "reload"));
         }
         sender.sendMessage(msg.toString());
     }

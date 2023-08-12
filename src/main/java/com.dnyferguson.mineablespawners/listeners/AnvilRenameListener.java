@@ -35,6 +35,6 @@ public class AnvilRenameListener implements Listener {
 
     Player player = (Player) e.getWhoClicked();
     e.setCancelled(true);
-    player.sendMessage(plugin.getConfigurationHandler().getMessage("anvil", "prevented"));
+    player.sendMessage(plugin.getConfigurationHandler().getMessage(player, "anvil", "prevented"));
   }
 }

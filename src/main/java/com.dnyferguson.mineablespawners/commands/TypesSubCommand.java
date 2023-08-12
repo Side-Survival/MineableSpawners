@@ -9,9 +9,9 @@ public class TypesSubCommand {
     public TypesSubCommand() {}
 
     public void execute(MineableSpawners plugin, CommandSender sender) {
-        StringBuilder msg = new StringBuilder(plugin.getConfigurationHandler().getMessage("types", "title"));
+        StringBuilder msg = new StringBuilder(plugin.getConfigurationHandler().getMessage(null, "types", "title"));
         for (EntityType entityType : EntityType.values()) {
-            msg.append(plugin.getConfigurationHandler().getMessage("types", "entries").replace("%mob%", entityType.name().toLowerCase()));
+            msg.append(plugin.getConfigurationHandler().getMessage(null, "types", "entries").replace("%mob%", entityType.name().toLowerCase()));
         }
         sender.sendMessage(msg.toString());
     }

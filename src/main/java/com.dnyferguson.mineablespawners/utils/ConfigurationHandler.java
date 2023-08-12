@@ -80,23 +80,6 @@ public class ConfigurationHandler {
 
         ConfigurationSection section = config.getConfigurationSection("mining");
 
-        msgs.put("blacklisted", section.getString("messages.blacklisted"));
-        msgs.put("no-permission", section.getString("messages.no-permission"));
-        msgs.put("no-individual-permission", section.getString("messages.no-individual-permission"));
-        msgs.put("wrong-tool", section.getString("messages.wrong-tool"));
-        msgs.put("no-silktouch", section.getString("messages.no-silktouch"));
-        msgs.put("not-level-required", section.getString("messages.not-level-required"));
-        msgs.put("inventory-full", section.getString("messages.inventory-full"));
-        msgs.put("still-break", section.getString("messages.still-break"));
-        msgs.put("requirements.permission", section.getString("requirements.permission"));
-        msgs.put("requirements.individual-permission", section.getString("requirements.individual-permission"));
-        msgs.put("requirements.silktouch", section.getString("requirements.silktouch"));
-        msgs.put("requirements.silktouch-level", section.getString("requirements.silktouch-level"));
-        msgs.put("requirements.wrong-tool", section.getString("requirements.wrong-tool"));
-        msgs.put("not-enough-money", section.getString("messages.not-enough-money"));
-        msgs.put("transaction-success", section.getString("messages.transaction-success"));
-        msgs.put("out-of-luck", section.getString("messages.out-of-luck"));
-
         lsts.put("blacklisted-worlds", section.getStringList("blacklisted-worlds"));
         lsts.put("perm-based-chances", section.getStringList("perm-based-chances"));
         lsts.put("tools", section.getStringList("tools"));
@@ -298,12 +281,14 @@ public class ConfigurationHandler {
     }
 
     public void sendMessage(String section, String key, CommandSender sender) {
-        if (getMessage(section, key) == null) {
+        Player pSender = (sender instanceof Player player) ? player : null;
+
+        if (getMessage(pSender, section, key) == null) {
             return;
         }
 
-        String message = getMessage(section, key);
-        if (message.equals("") || message.equals(" ")) {
+        String message = getMessage(pSender, section, key);
+        if (message.isBlank()) {
             return;
         }
 
@@ -311,12 +296,12 @@ public class ConfigurationHandler {
     }
 
     public void sendMessage(String section, String key, Player player) {
-        if (getMessage(section, key) == null) {
+        if (getMessage(player, section, key) == null) {
             return;
         }
 
-        String message = getMessage(section, key);
-        if (message.equals("") || message.equals(" ")) {
+        String message = getMessage(player, section, key);
+        if (message.isBlank()) {
             return;
         }
 
@@ -330,7 +315,11 @@ public class ConfigurationHandler {
         return new ArrayList<>();
     }
 
-    public String getMessage(String section, String key) {
+    public String getMessage(Player player, String section, String key) {
+        if (section.equalsIgnoreCase("mining") || section.equalsIgnoreCase("anvil")) {
+            return Messages.get(player, section + "." + key);
+        }
+
         return Chat.format(messages.get(section).get(key));
     }
 

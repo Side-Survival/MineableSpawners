@@ -40,14 +40,14 @@ public class EggChangeListener implements Listener {
 
         if (plugin.getConfigurationHandler().getList("eggs", "blacklisted-worlds").contains(player.getWorld().getName())) {
             e.setCancelled(true);
-            player.sendMessage(plugin.getConfigurationHandler().getMessage("eggs", "blacklisted"));
+            player.sendMessage(plugin.getConfigurationHandler().getMessage(null, "eggs", "blacklisted"));
             return;
         }
 
         if (plugin.getConfigurationHandler().getBoolean("eggs", "require-permission")) {
             if (!player.hasPermission("mineablespawners.eggchange")) {
                 e.setCancelled(true);
-                player.sendMessage(plugin.getConfigurationHandler().getMessage("eggs", "no-permission"));
+                player.sendMessage(plugin.getConfigurationHandler().getMessage(null, "eggs", "no-permission"));
                 return;
             }
         }
@@ -57,7 +57,7 @@ public class EggChangeListener implements Listener {
         if (plugin.getConfigurationHandler().getBoolean("eggs", "require-individual-permission")) {
             if (!player.hasPermission("mineablespawners.eggchange." + to.replace(" ", "_"))) {
                 e.setCancelled(true);
-                player.sendMessage(plugin.getConfigurationHandler().getMessage("eggs", "no-individual-permission"));
+                player.sendMessage(plugin.getConfigurationHandler().getMessage(null, "eggs", "no-individual-permission"));
                 return;
             }
         }
@@ -67,10 +67,10 @@ public class EggChangeListener implements Listener {
 
         if (from.equals(to)) {
             e.setCancelled(true);
-            player.sendMessage(plugin.getConfigurationHandler().getMessage("eggs", "already-type"));
+            player.sendMessage(plugin.getConfigurationHandler().getMessage(null, "eggs", "already-type"));
             return;
         }
 
-        player.sendMessage(plugin.getConfigurationHandler().getMessage("eggs", "success").replace("%from%", from).replace("%to%", to));
+        player.sendMessage(plugin.getConfigurationHandler().getMessage(null, "eggs", "success").replace("%from%", from).replace("%to%", to));
     }
 }

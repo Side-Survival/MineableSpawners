@@ -8,6 +8,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -47,7 +48,8 @@ public class GiveSubCommand {
         item.setAmount(amount);
 
         String mobFormatted = Chat.uppercaseStartingLetters(entityType.name());
-        meta.setDisplayName(Chat.format(plugin.getConfigurationHandler().getMessage("global", "name").replace("%mob%", mobFormatted)));
+        meta.setDisplayName(Chat.format(plugin.getConfigurationHandler().getMessage(null, "global", "name").replace("%mob%", mobFormatted)));
+        meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
         List<String> newLore = new ArrayList<>();
         if (plugin.getConfigurationHandler().getList("global", "lore") != null && plugin.getConfigurationHandler().getBoolean("global", "lore-enabled")) {
             for (String line : plugin.getConfigurationHandler().getList("global", "lore")) {
@@ -75,7 +77,6 @@ public class GiveSubCommand {
         }
 
         targetPlayer.getInventory().addItem(item);
-        plugin.getConfigurationHandler().getMessage("give", "success").replace("%mob%", mobFormatted).replace("%target%", targetPlayer.getName()).replace("%amount%", amount + "");
-        targetPlayer.sendMessage(plugin.getConfigurationHandler().getMessage("give", "received").replace("%mob%", mobFormatted).replace("%target%", targetPlayer.getName()).replace("%amount%", amount + ""));
+        plugin.getConfigurationHandler().getMessage(null, "give", "success").replace("%mob%", mobFormatted).replace("%target%", targetPlayer.getName()).replace("%amount%", amount + "");
     }
 }

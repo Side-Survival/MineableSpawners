@@ -73,7 +73,7 @@ public class SpawnerPlaceListener implements Listener {
 
         // check if blacklisted world
         if (plugin.getConfigurationHandler().getList("placing", "blacklisted-worlds").contains(player.getWorld().getName())) {
-            player.sendMessage(plugin.getConfigurationHandler().getMessage("placing", "blacklisted"));
+            player.sendMessage(plugin.getConfigurationHandler().getMessage(null, "placing", "blacklisted"));
             e.setCancelled(true);
             return;
         }
@@ -89,7 +89,7 @@ public class SpawnerPlaceListener implements Listener {
 
             if (!plugin.getEcon().withdrawPlayer(player, cost).transactionSuccess()) {
                 String missing = df.format(cost - plugin.getEcon().getBalance(player));
-                player.sendMessage(plugin.getConfigurationHandler().getMessage("placing", "not-enough-money").replace("%missing%", missing).replace("%cost%", cost + ""));
+                player.sendMessage(plugin.getConfigurationHandler().getMessage(null, "placing", "not-enough-money").replace("%missing%", missing).replace("%cost%", cost + ""));
                 e.setCancelled(true);
                 return;
             }
@@ -110,7 +110,7 @@ public class SpawnerPlaceListener implements Listener {
         }
 
         if (cost > 0) {
-            player.sendMessage(plugin.getConfigurationHandler().getMessage("placing", "transaction-success").replace("%type%", Chat.uppercaseStartingLetters(type.name())).replace("%cost%", df.format(cost).replace("%balance%", df.format(plugin.getEcon().getBalance(player)))));
+            player.sendMessage(plugin.getConfigurationHandler().getMessage(null, "placing", "transaction-success").replace("%type%", Chat.uppercaseStartingLetters(type.name())).replace("%cost%", df.format(cost).replace("%balance%", df.format(plugin.getEcon().getBalance(player)))));
         }
     }
 }

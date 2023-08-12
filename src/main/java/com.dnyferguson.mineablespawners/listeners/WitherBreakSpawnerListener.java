@@ -11,6 +11,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -60,7 +61,8 @@ public class WitherBreakSpawnerListener implements Listener {
         String mobFormatted = Chat.uppercaseStartingLetters(spawner.getSpawnedType().toString());
 
         if (meta != null) {
-            meta.setDisplayName(plugin.getConfigurationHandler().getMessage("global", "name").replace("%mob%", mobFormatted));
+            meta.setDisplayName(plugin.getConfigurationHandler().getMessage(null, "global", "name").replace("%mob%", mobFormatted));
+            meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
             List<String> newLore = new ArrayList<>();
             if (plugin.getConfigurationHandler().getList("global", "lore") != null && plugin.getConfigurationHandler().getBoolean("global", "lore-enabled")) {
                 for (String line : plugin.getConfigurationHandler().getList("global", "lore")) {
